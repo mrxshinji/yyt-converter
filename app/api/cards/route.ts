@@ -26,11 +26,12 @@ export async function GET(request: Request) {
     $(".card-product").each((_, el) => {
       const name = $(el).find(".text-primary").text().trim();
       const priceText = $(el).find(".text-end").first().text().trim();
+      const cardCode = $(el).find(".text-center").first().text().trim();
       const yenValue = parseFloat(priceText.replace(/[^\d.]/g, "")) || 0;
       const converted = (yenValue * rate).toFixed(2);
       const link = $(el).find(".product-img").find(`img`).attr("src");
       if (name && yenValue > 0) {
-        cards.push({ name, yen: yenValue, converted, link: link });
+        cards.push({ name, cardCode, yen: yenValue, converted, link: link });
       }
     });
 

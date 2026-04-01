@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { CardData } from "@/app/types"; // or "@/lib/types"
 import Image from "next/image";
+import { exportToXLSX } from "@/app/helper/export";
 
 export default function Home() {
   const [url, setUrl] = useState(
@@ -20,6 +21,17 @@ export default function Home() {
       );
       const data = await res.json();
       setCards(data.cards);
+    } catch (err) {
+      console.error("Fetch failed:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+    const exportToCSV = async () => {
+    setLoading(true);
+    try {
+      exportToXLSX(cards)
     } catch (err) {
       console.error("Fetch failed:", err);
     } finally {
@@ -54,6 +66,12 @@ export default function Home() {
         >
           Fetch
         </button>
+                <button
+          onClick={exportToCSV}
+          className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'
+        >
+          Export
+        </button>
       </div>
 
       {/* Cards display */}
@@ -76,8 +94,9 @@ export default function Home() {
                 />
               )}
               <h2 className='font-semibold text-sm'>{card.name}</h2>
+              <h2 className='font-semibold text-sm'>{card.cardCode}</h2>
               <p>
-                ¥{card.yen} → {card.converted}
+                ¥{card.yen} → RM{card.converted}
               </p>
             </div>
           ))}
